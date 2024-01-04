@@ -21,4 +21,7 @@ export const styles = {
         backgroundColor: "secondary.light",
         borderRadius: "20px 20px 20px 5px",
     },
+    text: {
+        whiteSpace: "pre-wrap",
+    },
 };

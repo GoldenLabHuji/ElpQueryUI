@@ -27,7 +27,9 @@ export default function Message({ message }: MessageProps) {
                     variant="outlined"
                     sx={isBot ? styles.paperBot : styles.paperUser}
                 >
-                    <Typography variant="body1">{message.text}</Typography>
+                    <Typography sx={styles.text} variant="body1">
+                        {message.text}
+                    </Typography>
                 </Paper>
             </Box>
         </Box>
