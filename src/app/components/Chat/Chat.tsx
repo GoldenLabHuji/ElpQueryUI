@@ -13,18 +13,15 @@ export default function Chat() {
         <Box sx={styles.container}>
             <Box sx={styles.secondContainer}>
                 {messagesSection && messagesSection.length > 0
-                    ? messagesSection.map((msgSection) =>
-                          msgSection?.messageSection &&
-                          msgSection?.messageSection.length > 0
-                              ? msgSection?.messageSection.map(
-                                    (message, index) => (
-                                        <Message
-                                            key={index}
-                                            message={message}
-                                        />
-                                    )
-                                )
-                              : []
+                    ? messagesSection.map(
+                          (msgSection) =>
+                              msgSection?.messageSection &&
+                              msgSection?.messageSection.length > 0 &&
+                              msgSection?.messageSection.map(
+                                  (message, index) => (
+                                      <Message key={index} message={message} />
+                                  )
+                              )
                       )
                     : []}
             </Box>
