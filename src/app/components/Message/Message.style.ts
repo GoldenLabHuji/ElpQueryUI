@@ -1,25 +1,51 @@
 export const styles = {
     container: {
-        display: "flex",
-        mb: 2,
+        bot: {
+            display: "flex",
+            mb: 2,
+            justifyContent: "flex-start",
+        },
+        user: {
+            display: "flex",
+            mb: 2,
+            justifyContent: "flex-end",
+        },
     },
     box: {
-        display: "flex",
-        alignItems: "center",
+        bot: {
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+        },
+        user: {
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row-reverse",
+        },
     },
-    paperBot: {
-        p: 2,
-        ml: 1,
-        mr: 0,
-        backgroundColor: "primary.light",
-        borderRadius: "20px 20px 20px 5px",
+    avatar: {
+        bot: {
+            bgcolor: "primary.main",
+        },
+        user: {
+            bgcolor: "secondary.main",
+        },
     },
-    paperUser: {
-        p: 2,
-        ml: 0,
-        mr: 1,
-        backgroundColor: "secondary.light",
-        borderRadius: "20px 20px 20px 5px",
+    paper: {
+        bot: {
+            p: 2,
+            ml: 1,
+            mr: 0,
+            backgroundColor: "primary.light",
+            borderRadius: "20px 20px 20px 5px",
+        },
+        user: {
+            p: 2,
+            ml: 0,
+            mr: 1,
+            backgroundColor: "secondary.light",
+            borderRadius: "20px 20px 20px 5px",
+        },
     },
     text: {
         whiteSpace: "pre-wrap",
