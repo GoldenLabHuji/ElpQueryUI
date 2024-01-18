@@ -19,19 +19,20 @@ export default function ChatBox() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [isEndSection, setIsEndSection] = useState<boolean>(false);
     const [isEndChat, setIsEndChat] = useState<boolean>(false);
-
-    const handleSend = (e: FormEvent<HTMLFormElement>) => {
+    
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         const input = data.get("input")?.toString() || "";
+        const lastQuestionIndex = botMessages.length - 1;
+        const lastMessageSectionQuestion =
+            currentMessagesSection[currentMessagesSection.length - 1];
 
         if (input !== "") {
-            let typeOfQuestion = "";
-            if (currentMessagesSection.length > 0) {
-                typeOfQuestion =
-                    currentMessagesSection[currentMessagesSection.length - 1]
-                        .typeOfQuestion;
-            }
+            const typeOfQuestion =
+                currentMessagesSection.length > 0
+                    ? lastMessageSectionQuestion.typeOfQuestion
+                    : "";
 
             const newMessage: Message = {
                 id: currentMessagesSection.length,
@@ -40,6 +41,7 @@ export default function ChatBox() {
                 typeOfQuestion: typeOfQuestion as typeOfQuestion,
             };
             setCurrentMessagesSection([...currentMessagesSection, newMessage]);
+
             if (
                 typeOfQuestion === "add" &&
                 input.toLowerCase().includes("no")
@@ -47,12 +49,12 @@ export default function ChatBox() {
                 setIsEndChat(true);
             }
         }
-        if (currentQuestionIndex < botMessages.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-        } else if (currentQuestionIndex === botMessages.length - 1) {
-            setCurrentQuestionIndex(0);
-            setIsEndSection(true);
-        }
+        setCurrentQuestionIndex(
+            currentQuestionIndex < lastQuestionIndex
+                ? currentQuestionIndex + 1
+                : 0
+        );
+        setIsEndSection(currentQuestionIndex === lastQuestionIndex);
         setIsSubmit(!isSubmit);
         e.currentTarget.reset();
     };
@@ -73,28 +75,28 @@ export default function ChatBox() {
             ...updatedMessages[lastMessageIndex],
             messageSection: currentMessagesSection,
         };
-        setMessages(updatedMessages);
 
+        setMessages((prevMessages) => {
+            const newMessageSection: MessageSection = {
+                id: prevMessages.length,
+                messageSection: [...currentMessagesSection],
+            };
+            return isEndSection
+                ? [...updatedMessages, newMessageSection]
+                : updatedMessages;
+        });
         if (isEndSection) {
-            setMessages((prevMessages) => {
-                const newMessageSection: MessageSection = {
-                    id: prevMessages.length,
-                    messageSection: [...currentMessagesSection],
-                };
-                return [...prevMessages, newMessageSection];
-            });
-            if (!isEndChat) {
-                setCurrentMessagesSection([botMessages[currentQuestionIndex]]);
-            } else {
-                setCurrentMessagesSection([]);
-            }
-            setIsEndSection(false);
+            setCurrentMessagesSection(
+                !isEndChat ? [botMessages[currentQuestionIndex]] : []
+            );
         }
+
+        setIsEndSection(false);
     }, [currentMessagesSection, isSubmit, isEndSection]);
 
     return (
         <Box sx={styles.box}>
-            <Box component="form" onSubmit={handleSend}>
+            <Box component="form" onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                     <ChatInput />
                     <ChatButton />
