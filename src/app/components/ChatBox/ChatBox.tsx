@@ -39,6 +39,7 @@ export default function ChatBox() {
                 : "";
 
         if (
+            lastMessageSectionQuestion.answerOptions &&
             !lastMessageSectionQuestion.answerOptions?.includes(Number(input))
         ) {
             const newMessage: Message = {
@@ -51,7 +52,13 @@ export default function ChatBox() {
             setCurrentMessagesSection([...currentMessagesSection, newMessage]);
         }
 
-        if (input !== "") {
+        if (
+            (lastMessageSectionQuestion.answerOptions?.includes(
+                Number(input)
+            ) ||
+                !lastMessageSectionQuestion.answerOptions) &&
+            input !== ""
+        ) {
             const newMessage: Message = {
                 id: currentMessagesSection.length,
                 text: input,
@@ -117,57 +124,45 @@ export default function ChatBox() {
                 numberOfPhon: null,
                 numberOfSyll: null,
             };
-            messages.map((msgSec) => {
-                const userFiilteredMessages = msgSec?.messageSection.filter(
+
+            messages.forEach((msgSec) => {
+                const userFilteredMessages = msgSec?.messageSection.filter(
                     (msg) => msg?.sender === "user"
                 );
-                let numericAttribute: NumericAttribute = {
+
+                const numericAttribute: NumericAttribute = {
                     ...emptyNumericAttribute,
                 };
-                userFiilteredMessages?.map((msg) => {
+
+                userFilteredMessages?.forEach((msg) => {
                     switch (msg?.typeOfQuestion) {
                         case "value":
                             numericAttribute.value = Number(msg?.text);
                             break;
                         case "operator":
-                            switch (Number(msg?.text)) {
-                                case 1:
-                                    numericAttribute.operator =
-                                        Operator.Greater;
-                                    break;
-                                case 2:
-                                    numericAttribute.operator = Operator.Lower;
-                                    break;
-                                case 3:
-                                    numericAttribute.operator = Operator.Equal;
-                                    break;
-                            }
+                            numericAttribute.operator = [
+                                Operator.Greater,
+                                Operator.Lower,
+                                Operator.Equal,
+                            ][Number(msg?.text) - 1];
                             break;
                         case "std":
                             numericAttribute.std = Number(msg?.text);
                             break;
                         case "parameter":
-                            switch (Number(msg?.text)) {
-                                case 1:
-                                    wordsParams.ageOfAquisition =
-                                        numericAttribute;
-                                    break;
-                                case 2:
-                                    wordsParams.numberOfPhon = numericAttribute;
-                                    break;
-                                case 3:
-                                    wordsParams.numberOfSyll = numericAttribute;
-                                    break;
-                                default:
-                                    break;
-                            }
+                            wordsParams[
+                                [
+                                    "ageOfAquisition",
+                                    "numberOfPhon",
+                                    "numberOfSyll",
+                                ][Number(msg?.text) - 1] as keyof QueryWords
+                            ] = numericAttribute;
                             break;
                         default:
                             break;
                     }
                 });
             });
-            console.log(wordsParams);
         }
     }, [isEndChat]);
 
