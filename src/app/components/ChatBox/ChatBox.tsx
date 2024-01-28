@@ -4,17 +4,15 @@ import { Box, Grid } from "@mui/material";
 import { styles } from "@/app/components/ChatBox/ChatBox.style";
 import ChatInput from "@/app/components/ChatInput";
 import ChatButton from "@/app/components/ChatButton";
-import { sender, typeOfQuestion } from "@/app/general/types";
 import { useRecoilState } from "recoil";
-import {
-    Message,
-    MessageSection,
-    QueryWords,
-    Operator,
-    NumericAttribute,
-} from "@/app/general/interfaces";
+import { Message } from "@/app/general/interfaces";
 import { messagesSectionAtom } from "@/app/store/atoms";
-import { botMessages, emptyNumericAttribute } from "@/app/general/resources";
+import { botMessages } from "@/app/general/resources";
+import {
+    handleUserInput,
+    updateMessagesSection,
+    handleEndChat,
+} from "@/app/components/ChatBox/utils";
 
 export default function ChatBox() {
     const [messages, setMessages] = useRecoilState(messagesSectionAtom);
@@ -30,55 +28,19 @@ export default function ChatBox() {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         const input = data.get("input")?.toString() || "";
-        const lastQuestionIndex = botMessages.length - 1;
-        const lastMessageSectionQuestion =
-            currentMessagesSection[currentMessagesSection.length - 1];
-        const typeOfQuestion =
-            currentMessagesSection.length > 0
-                ? lastMessageSectionQuestion.typeOfQuestion
-                : "";
 
-        if (
-            lastMessageSectionQuestion.answerOptions &&
-            !lastMessageSectionQuestion.answerOptions?.includes(Number(input))
-        ) {
-            const newMessage: Message = {
-                id: currentMessagesSection.length,
-                text: "I don't understand, please enter a valid option",
-                sender: "bot" as sender,
-                typeOfQuestion: typeOfQuestion as typeOfQuestion,
-                answerOptions: lastMessageSectionQuestion.answerOptions,
-            };
-            setCurrentMessagesSection([...currentMessagesSection, newMessage]);
-        }
+        handleUserInput(
+            input,
+            currentMessagesSection,
+            setCurrentMessagesSection,
+            setCurrentQuestionIndex,
+            setIsEndChat,
+            currentQuestionIndex,
+            setIsEndSection,
+            setIsSubmit,
+            isSubmit
+        );
 
-        if (
-            (lastMessageSectionQuestion.answerOptions?.includes(
-                Number(input)
-            ) ||
-                !lastMessageSectionQuestion.answerOptions) &&
-            input !== ""
-        ) {
-            const newMessage: Message = {
-                id: currentMessagesSection.length,
-                text: input,
-                sender: "user" as sender,
-                typeOfQuestion: typeOfQuestion as typeOfQuestion,
-            };
-            setCurrentMessagesSection([...currentMessagesSection, newMessage]);
-
-            if (typeOfQuestion === "add" && Number(input) === 2) {
-                setIsEndChat(true);
-            }
-            setCurrentQuestionIndex(
-                currentQuestionIndex < lastQuestionIndex
-                    ? currentQuestionIndex + 1
-                    : 0
-            );
-        }
-
-        setIsEndSection(currentQuestionIndex === lastQuestionIndex);
-        setIsSubmit(!isSubmit);
         e.currentTarget.reset();
     };
 
@@ -92,79 +54,23 @@ export default function ChatBox() {
     }, [currentQuestionIndex, isEndChat]);
 
     useEffect(() => {
-        const lastMessageIndex = messages.length - 1;
-        const updatedMessages = [...messages];
-        updatedMessages[lastMessageIndex] = {
-            ...updatedMessages[lastMessageIndex],
-            messageSection: currentMessagesSection,
-        };
-
-        setMessages((prevMessages) => {
-            const newMessageSection: MessageSection = {
-                id: prevMessages.length,
-                messageSection: [...currentMessagesSection],
-            };
-            return isEndSection
-                ? [...updatedMessages, newMessageSection]
-                : updatedMessages;
-        });
-        if (isEndSection) {
-            setCurrentMessagesSection(
-                !isEndChat ? [botMessages[currentQuestionIndex]] : []
-            );
-        }
-
-        setIsEndSection(false);
-    }, [currentMessagesSection, isSubmit, isEndSection]);
-
-    useEffect(() => {
         if (isEndChat) {
-            const wordsParams: QueryWords = {
-                ageOfAquisition: null,
-                numberOfPhon: null,
-                numberOfSyll: null,
-            };
-
-            messages.forEach((msgSec) => {
-                const userFilteredMessages = msgSec?.messageSection.filter(
-                    (msg) => msg?.sender === "user"
-                );
-
-                const numericAttribute: NumericAttribute = {
-                    ...emptyNumericAttribute,
-                };
-
-                userFilteredMessages?.forEach((msg) => {
-                    switch (msg?.typeOfQuestion) {
-                        case "value":
-                            numericAttribute.value = Number(msg?.text);
-                            break;
-                        case "operator":
-                            numericAttribute.operator = [
-                                Operator.Greater,
-                                Operator.Lower,
-                                Operator.Equal,
-                            ][Number(msg?.text) - 1];
-                            break;
-                        case "std":
-                            numericAttribute.std = Number(msg?.text);
-                            break;
-                        case "parameter":
-                            wordsParams[
-                                [
-                                    "ageOfAquisition",
-                                    "numberOfPhon",
-                                    "numberOfSyll",
-                                ][Number(msg?.text) - 1] as keyof QueryWords
-                            ] = numericAttribute;
-                            break;
-                        default:
-                            break;
-                    }
-                });
-            });
+            handleEndChat(messages);
         }
     }, [isEndChat]);
+
+    useEffect(() => {
+        updateMessagesSection(
+            currentQuestionIndex,
+            currentMessagesSection,
+            setCurrentMessagesSection,
+            setIsEndSection,
+            setMessages,
+            messages,
+            isEndSection,
+            isEndChat
+        );
+    }, [currentMessagesSection, isSubmit, isEndSection]);
 
     return (
         <Box sx={styles.box}>
