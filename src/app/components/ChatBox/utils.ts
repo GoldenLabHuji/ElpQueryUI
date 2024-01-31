@@ -104,11 +104,11 @@ export const updateMessagesSection = (
     setIsEndSection(false);
 };
 
-export const handleEndChat = (messages: MessageSection[]) => {
+export const handleEndChat = (messages: MessageSection[]): QueryWords => {
     const wordsParams: QueryWords = {
-        ageOfAquisition: null,
-        numberOfPhon: null,
-        numberOfSyll: null,
+        age_of_aquisition: null,
+        number_of_phon: null,
+        number_of_syll: null,
     };
 
     messages.forEach((msgSec) => {
@@ -137,7 +137,7 @@ export const handleEndChat = (messages: MessageSection[]) => {
                     break;
                 case "parameter":
                     wordsParams[
-                        ["ageOfAquisition", "numberOfPhon", "numberOfSyll"][
+                        ["age_of_aquisition", "number_of_phon", "number_of_syll"][
                             Number(msg?.text) - 1
                         ] as keyof QueryWords
                     ] = numericAttribute;
@@ -147,4 +147,6 @@ export const handleEndChat = (messages: MessageSection[]) => {
             }
         });
     });
+
+    return wordsParams;
 };

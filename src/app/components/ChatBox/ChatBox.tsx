@@ -6,7 +6,11 @@ import ChatInput from "@/app/components/ChatInput";
 import ChatButton from "@/app/components/ChatButton";
 import { useRecoilState } from "recoil";
 import { Message } from "@/app/general/interfaces";
-import { messagesSectionAtom } from "@/app/store/atoms";
+import {
+    messagesSectionAtom,
+    queryParamsAtom,
+    isQuerySubmitAtom,
+} from "@/app/store/atoms";
 import { botMessages } from "@/app/general/resources";
 import {
     handleUserInput,
@@ -16,6 +20,8 @@ import {
 
 export default function ChatBox() {
     const [messages, setMessages] = useRecoilState(messagesSectionAtom);
+    const [isQuerySubmit, setIsQuerySubmit] = useRecoilState(isQuerySubmitAtom);
+    const [_, setQueryParams] = useRecoilState(queryParamsAtom);
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const [currentMessagesSection, setCurrentMessagesSection] = useState<
         Message[]
@@ -55,7 +61,9 @@ export default function ChatBox() {
 
     useEffect(() => {
         if (isEndChat) {
-            handleEndChat(messages);
+            setQueryParams(handleEndChat(messages));
+            setIsQuerySubmit(true);
+
         }
     }, [isEndChat]);
 
@@ -74,6 +82,7 @@ export default function ChatBox() {
 
     return (
         <Box sx={styles.box}>
+            
             <Box component="form" onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                     <ChatInput />

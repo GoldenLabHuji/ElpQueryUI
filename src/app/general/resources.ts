@@ -1,9 +1,5 @@
-import {
-    Message,
-    MessageSection,
-    NumericAttribute,
-    Operator,
-} from "@/app/general/interfaces";
+import { Message, NumericAttribute, Operator } from "@/app/general/interfaces";
+import { sender, typeOfQuestion } from "@/app/general/types";
 
 export const botMessages: Message[] = [
     {
@@ -60,3 +56,27 @@ export const emptyNumericAttribute: NumericAttribute = {
     operator: Operator.Greater,
     std: 0,
 };
+
+export const resultMsg = {
+    id: "resultMsg",
+    text: "Here is the results of your query: ",
+    sender: "bot" as sender,
+    typeOfQuestion: "result" as typeOfQuestion,
+};
+
+export const tableHeaders = [
+    "Word",
+    "Length",
+    "SUBTLWF",
+    "Ortho_N",
+    "Phono_N",
+    "Concreteness_Rating",
+    "Age_Of_Acquisition",
+    "BG_Mean",
+    "Pron",
+    "NPhon",
+    "NSyll",
+    "NMorph",
+    "I_NM_Mean _RT",
+    "I NMG Mean Accuracy",
+];
