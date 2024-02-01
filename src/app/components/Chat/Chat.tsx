@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { Box } from "@mui/material";
 import Message from "@/app/components/Message/Message";
 import ChatBox from "@/app/components/ChatBox";
@@ -18,7 +18,7 @@ import Table from "@/app/components/Table";
 export default function Chat() {
     const [messagesSection, setMessagesSection] =
         useRecoilState(messagesSectionAtom);
-    const [queryParams, _] = useRecoilState(queryParamsAtom);
+    const [queryParams, setQueryParams] = useRecoilState(queryParamsAtom);
     const [queryWords, setQueryWords] = useRecoilState(queryWordsAtom);
     const [isResult, setIsResult] = useRecoilState(isResultsAtom);
     const [isQuerySubmit, setIsQuerySubmit] = useRecoilState(isQuerySubmitAtom);
@@ -57,8 +57,9 @@ export default function Chat() {
 
     useEffect(() => {
         if (isQuerySubmit) {
-            setMessagesSection([
-                // ...messagesSection,
+            setMessagesSection((prev) => [
+                ...prev,
+
                 {
                     id: "resultSection",
                     messageSection: [resultMsg],
