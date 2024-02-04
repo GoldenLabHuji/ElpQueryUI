@@ -1,4 +1,4 @@
-import { QueryWords, Operator } from "@/app/general/interfaces";
+import { QueryWords } from "@/app/general/interfaces";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -12,9 +12,9 @@ export async function POST(request: NextRequest) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            age_of_aquisition: wordsParams.age_of_aquisition,
-            number_of_phon: wordsParams.number_of_phon,
-            number_of_syll: wordsParams.number_of_syll,
+            age_of_aquisition: wordsParams?.age_of_aquisition,
+            number_of_phon: wordsParams?.number_of_phon,
+            number_of_syll: wordsParams?.number_of_syll,
         }),
     });
 
