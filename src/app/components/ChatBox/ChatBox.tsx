@@ -63,7 +63,6 @@ export default function ChatBox() {
         if (isEndChat) {
             setQueryParams(handleEndChat(messages));
             setIsQuerySubmit(true);
-
         }
     }, [isEndChat]);
 
@@ -82,7 +81,6 @@ export default function ChatBox() {
 
     return (
         <Box sx={styles.box}>
-            
             <Box component="form" onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                     <ChatInput />
