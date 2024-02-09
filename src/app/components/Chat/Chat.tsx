@@ -13,7 +13,6 @@ import {
     isQuerySubmitAtom,
 } from "@/app/store/atoms";
 import { resultMsg } from "@/app/general/resources";
-import Table from "@/app/components/Table";
 
 export default function Chat() {
     const [messagesSection, setMessagesSection] =
@@ -84,9 +83,8 @@ export default function Chat() {
                               )
                       )
                     : []}
-                {isResult && queryWords.data?.length > 0 && (
-                    <Table rows={queryWords.data} />
-                )}
+                {/* {isResult && queryWords.data?.length > 0 && ( */}
+                {/* )} */}
             </Box>
 
             <ChatBox />

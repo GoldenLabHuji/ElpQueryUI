@@ -59,7 +59,8 @@ export const emptyNumericAttribute: NumericAttribute = {
 
 export const resultMsg = {
     id: "resultMsg",
-    text: "Here is the results of your query: ",
+    text: `Here is the results of your query. 
+You can download the results as a csv file`,
     sender: "bot" as sender,
     typeOfQuestion: "result" as typeOfQuestion,
 };
