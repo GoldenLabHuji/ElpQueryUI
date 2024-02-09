@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import Message from "@/app/components/Message/Message";
 import ChatBox from "@/app/components/ChatBox";
@@ -22,6 +22,16 @@ export default function Chat() {
     const [queryWords, setQueryWords] = useRecoilState(queryWordsAtom);
     const [isResult, setIsResult] = useRecoilState(isResultsAtom);
     const [isQuerySubmit, setIsQuerySubmit] = useRecoilState(isQuerySubmitAtom);
+
+    const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            (messagesEndRef.current as HTMLElement).scrollIntoView({
+                behavior: "smooth",
+            });
+        }
+    }, [messagesSection]);
 
     useEffect(() => {
         const getQueryWords = async () => {
@@ -87,6 +97,7 @@ export default function Chat() {
                 {isResult && queryWords.data?.length > 0 && (
                     <Table rows={queryWords.data} />
                 )}
+                <div ref={messagesEndRef} />
             </Box>
 
             <ChatBox />
