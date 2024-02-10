@@ -14,6 +14,7 @@ import {
 } from "@/app/store/atoms";
 import { resultMsg } from "@/app/general/resources";
 import Table from "@/app/components/Table";
+import CSVButton from "@/app/components/CSVButton";
 
 export default function Chat() {
     const [messagesSection, setMessagesSection] =
@@ -85,7 +86,7 @@ export default function Chat() {
                       )
                     : []}
                 {isResult && queryWords.data?.length > 0 && (
-                    <Table rows={queryWords.data} />
+                    <CSVButton queryWords={queryWords?.data} />
                 )}
             </Box>
 
