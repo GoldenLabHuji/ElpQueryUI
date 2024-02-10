@@ -33,14 +33,12 @@ export const styles = {
     },
     paper: {
         bot: {
-            p: 2,
             ml: 1,
             mr: 0,
             backgroundColor: "primary.light",
             borderRadius: "20px 20px 20px 5px",
         },
         user: {
-            p: 2,
             ml: 0,
             mr: 1,
             backgroundColor: "secondary.light",
@@ -48,6 +46,8 @@ export const styles = {
         },
     },
     text: {
+        p: 1.5,
+        mr: 1,
         whiteSpace: "pre-wrap",
     },
 };

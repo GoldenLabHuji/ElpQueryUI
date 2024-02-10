@@ -1,6 +1,8 @@
 import { Avatar, Box, Paper, Typography } from "@mui/material";
 import { styles } from "@/app/components/Message/Message.style";
 import { MessageProps } from "@/app/general/interfaces";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
+import PersonIcon from "@mui/icons-material/Person";
 
 export default function Message({ message }: MessageProps) {
     const isBot = message.sender === "bot";
@@ -9,7 +11,7 @@ export default function Message({ message }: MessageProps) {
         <Box sx={isBot ? styles.container.bot : styles.container.user}>
             <Box sx={isBot ? styles.box.bot : styles.box.user}>
                 <Avatar sx={isBot ? styles.avatar.bot : styles.avatar.user}>
-                    {isBot ? "B" : "U"}
+                    {isBot ? <SmartToyIcon /> : <PersonIcon />}
                 </Avatar>
                 <Paper
                     variant="outlined"
