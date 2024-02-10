@@ -39,7 +39,6 @@ export const styles = {
             borderRadius: "20px 20px 20px 5px",
         },
         user: {
-            p: 2,
             ml: 0,
             mr: 1,
             backgroundColor: "secondary.light",
