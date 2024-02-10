@@ -13,6 +13,7 @@ import {
     isQuerySubmitAtom,
 } from "@/app/store/atoms";
 import { resultMsg } from "@/app/general/resources";
+import CSVButton from "@/app/components/CSVButton";
 
 export default function Chat() {
     const [messagesSection, setMessagesSection] =
@@ -83,8 +84,9 @@ export default function Chat() {
                               )
                       )
                     : []}
-                {/* {isResult && queryWords.data?.length > 0 && ( */}
-                {/* )} */}
+                {isResult && queryWords.data?.length > 0 && (
+                    <CSVButton queryWords={queryWords?.data} />
+                )}
             </Box>
 
             <ChatBox />
