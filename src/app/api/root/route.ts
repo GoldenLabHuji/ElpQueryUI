@@ -3,10 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     const url = process.env.api_url;
-    const wordsLimit = 10;
     const wordsParams: QueryWords = await request.json();
 
-    const response = await fetch(`${url}/${wordsLimit}`, {
+    const response = await fetch(`${url}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
