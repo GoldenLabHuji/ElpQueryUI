@@ -132,14 +132,13 @@ export const handleEndChat = (messages: MessageSection[]): QueryWords => {
                         Operator.Equal,
                     ][Number(msg?.text) - 1];
                     break;
-                case "std":
-                    numericAttribute.std = Number(msg?.text);
-                    break;
                 case "parameter":
                     wordsParams[
-                        ["age_of_aquisition", "number_of_phon", "number_of_syll"][
-                            Number(msg?.text) - 1
-                        ] as keyof QueryWords
+                        [
+                            "age_of_aquisition",
+                            "number_of_phon",
+                            "number_of_syll",
+                        ][Number(msg?.text) - 1] as keyof QueryWords
                     ] = numericAttribute;
                     break;
                 default:
