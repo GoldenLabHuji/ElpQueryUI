@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { Box } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import { Box, CircularProgress } from "@mui/material";
 import Message from "@/app/components/Message/Message";
 import ChatBox from "@/app/components/ChatBox";
 import { styles } from "@/app/components/Chat/Chat.style";
@@ -22,6 +22,7 @@ export default function Chat() {
     const [queryWords, setQueryWords] = useRecoilState(queryWordsAtom);
     const [isResult, setIsResult] = useRecoilState(isResultsAtom);
     const [isQuerySubmit, setIsQuerySubmit] = useRecoilState(isQuerySubmitAtom);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const messagesEndRef = useRef(null);
 
@@ -36,6 +37,7 @@ export default function Chat() {
     useEffect(() => {
         const getQueryWords = async () => {
             try {
+                setIsLoading(true);
                 const response = await fetch("/api/root", {
                     method: "POST",
                     headers: {
@@ -56,6 +58,8 @@ export default function Chat() {
                 setQueryWords(data);
             } catch (err: any) {
                 console.log(err.message);
+            } finally {
+                setIsLoading(false);
             }
         };
         getQueryWords();
@@ -94,6 +98,11 @@ export default function Chat() {
                               )
                       )
                     : []}
+                {isLoading && (
+                    <Box textAlign="center">
+                        <CircularProgress />
+                    </Box>
+                )}
                 {isResult && queryWords.data?.length > 0 && (
                     <CSVButton queryWords={queryWords?.data} />
                 )}
