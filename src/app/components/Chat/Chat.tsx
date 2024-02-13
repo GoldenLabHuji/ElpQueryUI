@@ -44,9 +44,9 @@ export default function Chat() {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        age_of_aquisition: queryParams.age_of_aquisition,
-                        number_of_phon: queryParams.number_of_phon,
-                        number_of_syll: queryParams.number_of_syll,
+                        age_of_aquisition: queryParams?.age_of_aquisition,
+                        number_of_phon: queryParams?.number_of_phon,
+                        number_of_syll: queryParams?.number_of_syll,
                     }),
                 });
 
@@ -62,7 +62,9 @@ export default function Chat() {
                 setIsLoading(false);
             }
         };
-        getQueryWords();
+        if (isQuerySubmit) {
+            getQueryWords();
+        }
     }, [isQuerySubmit]);
 
     useEffect(() => {
