@@ -4,29 +4,47 @@ import { sender, typeOfQuestion } from "@/app/general/types";
 export const botMessages: Message[] = [
     {
         id: 0,
-        text: `What parameter would you like add to you query?
-1. age of aquisition
-2. number of phon
-3. number of syll`,
+        text: `Hello! I'm a ChatBot that will help you to get small pieces of data 
+from a large dataset called the English Lexicon Project. 
+The English Lexicon Project contains a large number of words 
+with many of their properties, and summaries of behavioral data 
+from experiments that examined how easy or difficult to read these words are. 
+My main purpose as a ChatBot is to help you get data based on specific properties of words.
+For example, you may be interested in looking specifically at very long or very short words, 
+or to look at words that are acquired early or late in childhood.
+ At the moment, I have the capacity of helping you extract data based on three word properties:
+1: Age of Acquisition
+2: Number of Phonemes
+3: Number of Syllables.
+Which property would you like to start with?`,
         sender: "bot",
         typeOfQuestion: "parameter",
         answerOptions: [1, 2, 3],
     },
     {
         id: 1,
-        text: "What is the value of this parameter?",
-        sender: "bot",
-        typeOfQuestion: "value",
-    },
-    {
-        id: 2,
-        text: `Do you want the query words to be:
-1. Greater then this value 
-2. Lower then this value
-3. Equal to this value`,
+        text: `To help you get the words you desire, 
+I need to know few things about your specific 
+requirments to the property you have chosen above.
+First I need to know if you want the words to be greater, lower or equal to a specific value.
+Then I need to know the value of this property you want to start with.
+For example, if you chose the property "age of aquisition" 
+and you want words that aquiered at the age of 5 or less,
+you will choose the "Lower" in this question, and then the value 5 in the next question.
+So, Do you want the words to be greater, lower or equal to a specific value?
+1. Greater
+2. Lower
+3. Equal`,
         sender: "bot",
         typeOfQuestion: "operator",
         answerOptions: [1, 2, 3],
+    },
+    {
+        id: 2,
+        text: `Now I need to know the value of this parameter you want to start with.
+What would you like the value of this property to be?`,
+        sender: "bot",
+        typeOfQuestion: "value",
     },
     {
         id: 3,
