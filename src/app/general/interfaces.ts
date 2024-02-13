@@ -26,7 +26,6 @@ export enum Operator {
 export interface NumericAttribute {
     value: number;
     operator: Operator;
-    std: number;
 }
 
 export interface QueryWords {

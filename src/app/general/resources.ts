@@ -30,12 +30,6 @@ export const botMessages: Message[] = [
     },
     {
         id: 3,
-        text: "What would you like the std of this parameter to be?",
-        sender: "bot",
-        typeOfQuestion: "std",
-    },
-    {
-        id: 4,
         text: `Do you want to add more parameter?
 1. Yes
 2. No`,
@@ -48,7 +42,6 @@ export const botMessages: Message[] = [
 export const emptyNumericAttribute: NumericAttribute = {
     value: 0,
     operator: Operator.Greater,
-    std: 0,
 };
 
 export const resultMsg = {
