@@ -28,10 +28,16 @@ export interface NumericAttribute {
     operator: Operator;
 }
 
+export interface StringAttribute {
+    value: string;
+}
+
 export interface QueryWords {
     age_of_aquisition: NumericAttribute | null;
     number_of_phon: NumericAttribute | null;
     number_of_syll: NumericAttribute | null;
+    start_with: StringAttribute | null;
+    sound_like: StringAttribute | null;
 }
 export interface TableProps {
     rows: WordData[];
