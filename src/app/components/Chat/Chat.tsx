@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { Box, CircularProgress } from "@mui/material";
 import Message from "@/app/components/Message/Message";
 import ChatBox from "@/app/components/ChatBox";
@@ -23,6 +24,7 @@ export default function Chat() {
     const [isResult, setIsResult] = useRecoilState(isResultsAtom);
     const [isQuerySubmit, setIsQuerySubmit] = useRecoilState(isQuerySubmitAtom);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [progress, setProgress] = useState<number>(0);
 
     const messagesEndRef = useRef(null);
 
@@ -38,23 +40,28 @@ export default function Chat() {
         const getQueryWords = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch("/api/root", {
-                    method: "POST",
+                const { data } = await axios({
+                    method: "post",
+                    url: "/api/root",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
+                    data: JSON.stringify({
                         age_of_aquisition: queryParams?.age_of_aquisition,
                         number_of_phon: queryParams?.number_of_phon,
                         number_of_syll: queryParams?.number_of_syll,
                     }),
+                    onUploadProgress: (downloadProgress) => {
+                        setProgress(
+                            Math.round(
+                                (downloadProgress.loaded /
+                                    (downloadProgress.total ?? 0)) *
+                                    100
+                            )
+                        );
+                    },
                 });
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.message);
-                }
-                const data = await response.json();
                 setQueryWords(data);
             } catch (err: any) {
                 console.log(err.message);
@@ -66,10 +73,6 @@ export default function Chat() {
             getQueryWords();
         }
     }, [isQuerySubmit]);
-
-    useEffect(() => {
-        console.log("result", queryWords.data);
-    }, [queryWords]);
 
     useEffect(() => {
         if (isQuerySubmit) {
@@ -102,7 +105,10 @@ export default function Chat() {
                     : []}
                 {isLoading && (
                     <Box textAlign="center">
-                        <CircularProgress />
+                        <CircularProgress
+                            variant="determinate"
+                            value={progress}
+                        />
                     </Box>
                 )}
                 {isResult && queryWords.data?.length > 0 && (
