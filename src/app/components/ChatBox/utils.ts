@@ -6,6 +6,7 @@ import {
     QueryWords,
     Operator,
     NumericAttribute,
+    StringAttribute,
 } from "@/app/general/interfaces";
 import { botMessages, emptyNumericAttribute } from "@/app/general/resources";
 
@@ -109,6 +110,8 @@ export const handleEndChat = (messages: MessageSection[]): QueryWords => {
         age_of_aquisition: null,
         number_of_phon: null,
         number_of_syll: null,
+        start_with: null,
+        sound_like: null
     };
 
     messages.forEach((msgSec) => {
@@ -139,7 +142,7 @@ export const handleEndChat = (messages: MessageSection[]): QueryWords => {
                             "number_of_phon",
                             "number_of_syll",
                         ][Number(msg?.text) - 1] as keyof QueryWords
-                    ] = numericAttribute;
+                    ] = numericAttribute as NumericAttribute & StringAttribute;
                     break;
                 default:
                     break;
