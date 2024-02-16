@@ -8,22 +8,40 @@ export const botMessages: Message[] = [
 
 The English Lexicon Project contains a large number of words with many of their properties, and summaries of behavioral data from experiments that examined how easy or difficult to read these words are. 
 
-My main purpose as a ChatBot is to help you get data based on specific properties of words.
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 1,
+        text: `My main purpose as a ChatBot is to help you get data based on specific properties of words.
+
 For example, you may be interested in looking specifically at very long or very short words, 
 or to look at words that are acquired early or late in childhood.
 
-At the moment, I have the capacity of helping you extract data based on three word properties:
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 2,
+        text: `At the moment, I have the capacity of helping you extract data based on five word properties:
+
 1: Age of Acquisition
 2: Number of Phonemes
-3: Number of Syllables.
+3: Number of Syllables
+4: words that start with the same characters as a chosen word
+5: words that sound like a chosen word
 
 Which property would you like to start with?`,
         sender: "bot",
         typeOfQuestion: "parameter",
-        answerOptions: [1, 2, 3],
+        answerOptions: [1, 2, 3, 4, 5],
     },
     {
-        id: 1,
+        id: 3,
         text: `To help you get the words you desire, 
 I need to know few things about your specific 
 requirments to the property you have chosen above.
@@ -31,9 +49,24 @@ requirments to the property you have chosen above.
 First I need to know if you want the words to be greater, lower or equal to a specific value.
 Then I need to know the value of this property you want to start with.
 
-For example, if you chose the property "age of aquisition" and you want words that aquiered at the age of 5 or less, you will choose the "Lower" in this question, and then the value 5 in the next question.
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 4,
+        text: `For example, if you chose the property "age of aquisition" and you want words that aquiered at the age of 5 or less, you will choose the "Lower" in this question, and then the value 5 in the next question.
 
-Let's start with the first question.
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 5,
+        text: `Let's start with the first question.
+        
 Do you want the words to be greater, lower or equal to a specific value?
 
 1. Greater
@@ -44,7 +77,7 @@ Do you want the words to be greater, lower or equal to a specific value?
         answerOptions: [1, 2, 3],
     },
     {
-        id: 2,
+        id: 6,
         text: `Now I need to know the value of this parameter you want to start with.
         
 What would you like the value of this property to be?`,
@@ -52,7 +85,7 @@ What would you like the value of this property to be?`,
         typeOfQuestion: "value",
     },
     {
-        id: 3,
+        id: 7,
         text: `Do you want to add more parameter?
 1. Yes
 2. No`,

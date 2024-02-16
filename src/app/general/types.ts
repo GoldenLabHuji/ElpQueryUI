@@ -3,6 +3,6 @@ export type typeOfQuestion =
     | "parameter"
     | "value"
     | "operator"
-    | "std"
     | "add"
-    | "result";
+    | "result"
+    | "intro";
