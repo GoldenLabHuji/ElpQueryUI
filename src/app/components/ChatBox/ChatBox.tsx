@@ -11,7 +11,11 @@ import {
     queryParamsAtom,
     isQuerySubmitAtom,
 } from "@/app/store/atoms";
-import { botMessages } from "@/app/general/resources";
+import {
+    botMessages,
+    botNumericMessages,
+    botStringMessages,
+} from "@/app/general/resources";
 import {
     handleUserInput,
     updateMessagesSection,
@@ -52,10 +56,32 @@ export default function ChatBox() {
 
     useEffect(() => {
         if (!isEndChat) {
-            setCurrentMessagesSection([
-                ...currentMessagesSection,
-                botMessages[currentQuestionIndex],
-            ]);
+            if (currentQuestionIndex < 2) {
+                setCurrentMessagesSection([
+                    ...currentMessagesSection,
+                    botMessages[currentQuestionIndex],
+                ]);
+            } else {
+                const parameterMsg = currentMessagesSection.filter((msg) => {
+                    return (
+                        msg.typeOfQuestion === "parameter" &&
+                        msg.sender === "user"
+                    );
+                });
+                const parameter = parameterMsg[0].text;
+                if (["1", "2", "3"].includes(parameter)) {
+                    setCurrentMessagesSection([
+                        ...currentMessagesSection,
+                        botNumericMessages[currentQuestionIndex - 2],
+                    ]);
+                } else {
+                    setCurrentMessagesSection([
+                        ...currentMessagesSection,
+                        botStringMessages[currentQuestionIndex - 2],
+                    ]);
+                }
+                setCurrentQuestionIndex(1);
+            }
         }
     }, [currentQuestionIndex, isEndChat]);
 

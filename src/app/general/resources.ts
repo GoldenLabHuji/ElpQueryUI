@@ -32,16 +32,18 @@ Enter 1 to continue`,
 1: Age of Acquisition
 2: Number of Phonemes
 3: Number of Syllables
-4: words that start with the same characters as a chosen word
-5: words that sound like a chosen word
+4: Related words ( like words that start with the same characters as a chosen word or words that sound like a chosen word )
 
 Which property would you like to start with?`,
         sender: "bot",
         typeOfQuestion: "parameter",
-        answerOptions: [1, 2, 3, 4, 5],
+        answerOptions: [1, 2, 3, 4],
     },
+];
+
+export const botNumericMessages: Message[] = [
     {
-        id: 3,
+        id: 0,
         text: `To help you get the words you desire, 
 I need to know few things about your specific 
 requirments to the property you have chosen above.
@@ -55,7 +57,7 @@ Enter 1 to continue`,
         answerOptions: [1],
     },
     {
-        id: 4,
+        id: 1,
         text: `For example, if you chose the property "age of aquisition" and you want words that aquiered at the age of 5 or less, you will choose the "Lower" in this question, and then the value 5 in the next question.
 
 Enter 1 to continue`,
@@ -64,7 +66,7 @@ Enter 1 to continue`,
         answerOptions: [1],
     },
     {
-        id: 5,
+        id: 2,
         text: `Let's start with the first question.
         
 Do you want the words to be greater, lower or equal to a specific value?
@@ -77,7 +79,7 @@ Do you want the words to be greater, lower or equal to a specific value?
         answerOptions: [1, 2, 3],
     },
     {
-        id: 6,
+        id: 3,
         text: `Now I need to know the value of this parameter you want to start with.
         
 What would you like the value of this property to be?`,
@@ -85,7 +87,53 @@ What would you like the value of this property to be?`,
         typeOfQuestion: "value",
     },
     {
-        id: 7,
+        id: 4,
+        text: `Do you want to add more parameter?
+1. Yes
+2. No`,
+        sender: "bot",
+        typeOfQuestion: "add",
+        answerOptions: [1, 2],
+    },
+];
+
+export const botStringMessages: Message[] = [
+    {
+        id: 0,
+        text: `To help you get the words you desire, 
+I need to know few things about your specific 
+requirments to the property you have chosen above.
+
+First I need to know if you want the words to be words that starts with the same characters as a chosen word or words that sound like a chosen word.
+Then I need to know the word you want to start with.
+
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 1,
+        text: `Let's start with the first question.
+        
+Do you want the words to be:
+
+1. Words that starts with the same characters as a chosen word
+2. Words that sound like a chosen word`,
+        sender: "bot",
+        typeOfQuestion: "operator",
+        answerOptions: [1, 2],
+    },
+    {
+        id: 2,
+        text: `Now I need to know the word you want to start with.
+        
+What would you like the this word to be?`,
+        sender: "bot",
+        typeOfQuestion: "value",
+    },
+    {
+        id: 3,
         text: `Do you want to add more parameter?
 1. Yes
 2. No`,
