@@ -15,6 +15,8 @@ export async function POST(request: NextRequest) {
             age_of_aquisition: wordsParams?.age_of_aquisition,
             number_of_phon: wordsParams?.number_of_phon,
             number_of_syll: wordsParams?.number_of_syll,
+            start_with: wordsParams?.start_with,
+            sound_like: wordsParams?.sound_like,
         }),
     });
 

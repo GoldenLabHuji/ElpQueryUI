@@ -11,11 +11,7 @@ import {
     queryParamsAtom,
     isQuerySubmitAtom,
 } from "@/app/store/atoms";
-import {
-    botMessages,
-    botNumericMessages,
-    botStringMessages,
-} from "@/app/general/resources";
+import { botMessages } from "@/app/general/resources";
 import {
     handleUserInput,
     updateMessagesSection,
@@ -25,7 +21,7 @@ import {
 export default function ChatBox() {
     const [messages, setMessages] = useRecoilState(messagesSectionAtom);
     const [isQuerySubmit, setIsQuerySubmit] = useRecoilState(isQuerySubmitAtom);
-    const [_, setQueryParams] = useRecoilState(queryParamsAtom);
+    const [queryParams, setQueryParams] = useRecoilState(queryParamsAtom);
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const [currentMessagesSection, setCurrentMessagesSection] = useState<
         Message[]
@@ -33,6 +29,10 @@ export default function ChatBox() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [isEndSection, setIsEndSection] = useState<boolean>(false);
     const [isEndChat, setIsEndChat] = useState<boolean>(false);
+    const [lastQuestionIndex, setLastQuestionIndex] = useState<number>(
+        botMessages.length - 1
+    );
+    const [isStringParameter, setIsStringParameter] = useState<boolean>(false);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -48,6 +48,9 @@ export default function ChatBox() {
             currentQuestionIndex,
             setIsEndSection,
             setIsSubmit,
+            lastQuestionIndex,
+            setLastQuestionIndex,
+            setIsStringParameter,
             isSubmit
         );
 
@@ -56,38 +59,21 @@ export default function ChatBox() {
 
     useEffect(() => {
         if (!isEndChat) {
-            if (currentQuestionIndex < 2) {
-                setCurrentMessagesSection([
-                    ...currentMessagesSection,
-                    botMessages[currentQuestionIndex],
-                ]);
-            } else {
-                const parameterMsg = currentMessagesSection.filter((msg) => {
-                    return (
-                        msg.typeOfQuestion === "parameter" &&
-                        msg.sender === "user"
-                    );
-                });
-                const parameter = parameterMsg[0].text;
-                if (["1", "2", "3"].includes(parameter)) {
-                    setCurrentMessagesSection([
-                        ...currentMessagesSection,
-                        botNumericMessages[currentQuestionIndex - 2],
-                    ]);
-                } else {
-                    setCurrentMessagesSection([
-                        ...currentMessagesSection,
-                        botStringMessages[currentQuestionIndex - 2],
-                    ]);
-                }
-                setCurrentQuestionIndex(1);
-            }
+            setCurrentMessagesSection([
+                ...currentMessagesSection,
+                botMessages[currentQuestionIndex],
+            ]);
         }
     }, [currentQuestionIndex, isEndChat]);
 
     useEffect(() => {
+        setLastQuestionIndex(botMessages.length - 1);
+    }, [botMessages]);
+
+    useEffect(() => {
         if (isEndChat) {
-            setQueryParams(handleEndChat(messages));
+            const params = handleEndChat(messages, isStringParameter);
+            setQueryParams(params);
             setIsQuerySubmit(true);
         }
     }, [isEndChat]);

@@ -24,6 +24,8 @@ export const queryParamsAtom: RecoilState<QueryWords> = atom({
         age_of_aquisition: null,
         number_of_phon: null,
         number_of_syll: null,
+        start_with: null,
+        sound_like: null,
     } as QueryWords,
 });
 

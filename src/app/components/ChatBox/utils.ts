@@ -8,7 +8,12 @@ import {
     NumericAttribute,
     StringAttribute,
 } from "@/app/general/interfaces";
-import { botMessages, emptyNumericAttribute } from "@/app/general/resources";
+import {
+    botMessages,
+    botStringMessages,
+    botNumericMessages,
+    emptyNumericAttribute,
+} from "@/app/general/resources";
 
 export const handleUserInput = (
     input: string,
@@ -19,9 +24,11 @@ export const handleUserInput = (
     currentQuestionIndex: number,
     setIsEndSection: (isEndSection: boolean) => void,
     setIsSubmit: (isSubmit: boolean) => void,
+    lastQuestionIndex: number,
+    setLastQuestionIndex: (lastQuestionIndex: number) => void,
+    setIsStringParameter: (isStringParameter: boolean) => void,
     isSubmit: boolean
 ) => {
-    const lastQuestionIndex = botMessages.length - 1;
     const lastMessageSectionQuestion =
         currentMessagesSection[currentMessagesSection.length - 1];
     const typeOfQuestion =
@@ -59,8 +66,20 @@ export const handleUserInput = (
         if (typeOfQuestion === "add" && Number(input) === 2) {
             setIsEndChat(true);
         }
+
+        if (typeOfQuestion === "parameter" && Number(input) === 4) {
+            setIsStringParameter(true);
+            botMessages.push(...botStringMessages);
+            setLastQuestionIndex(botMessages.length - 1);
+            setIsEndSection(false);
+        } else if (typeOfQuestion === "parameter" && Number(input) !== 4) {
+            setIsStringParameter(false);
+            botMessages.push(...botNumericMessages);
+            setLastQuestionIndex(botMessages.length - 1);
+        }
+
         setCurrentQuestionIndex(
-            currentQuestionIndex < lastQuestionIndex
+            currentQuestionIndex < lastQuestionIndex + 1
                 ? currentQuestionIndex + 1
                 : 0
         );
@@ -105,44 +124,66 @@ export const updateMessagesSection = (
     setIsEndSection(false);
 };
 
-export const handleEndChat = (messages: MessageSection[]): QueryWords => {
+export const handleEndChat = (
+    messages: MessageSection[],
+    isStringParameter: boolean
+): QueryWords => {
     const wordsParams: QueryWords = {
         age_of_aquisition: null,
         number_of_phon: null,
         number_of_syll: null,
         start_with: null,
-        sound_like: null
+        sound_like: null,
     };
 
     messages.forEach((msgSec) => {
         const userFilteredMessages = msgSec?.messageSection.filter(
-            (msg) => msg?.sender === "user"
+            (msg) => msg && msg?.sender === "user"
         );
 
         const numericAttribute: NumericAttribute = {
             ...emptyNumericAttribute,
         };
+        const stringAttribute: StringAttribute = {
+            value: "",
+        };
 
         userFilteredMessages?.forEach((msg) => {
             switch (msg?.typeOfQuestion) {
                 case "value":
-                    numericAttribute.value = Number(msg?.text);
+                    if (!isStringParameter) {
+                        numericAttribute.value = Number(msg?.text);
+                    } else {
+                        stringAttribute.value = msg?.text;
+                    }
                     break;
                 case "operator":
-                    numericAttribute.operator = [
-                        Operator.Greater,
-                        Operator.Lower,
-                        Operator.Equal,
-                    ][Number(msg?.text) - 1];
+                    if (!isStringParameter) {
+                        numericAttribute.operator = [
+                            Operator.Greater,
+                            Operator.Lower,
+                            Operator.Equal,
+                        ][Number(msg?.text) - 1];
+                    } else {
+                        wordsParams[
+                            ["start_with", "sound_like"][
+                                Number(msg?.text) - 1
+                            ] as keyof QueryWords
+                        ] = stringAttribute as StringAttribute &
+                            NumericAttribute;
+                    }
                     break;
                 case "parameter":
-                    wordsParams[
-                        [
-                            "age_of_aquisition",
-                            "number_of_phon",
-                            "number_of_syll",
-                        ][Number(msg?.text) - 1] as keyof QueryWords
-                    ] = numericAttribute as NumericAttribute & StringAttribute;
+                    if (!isStringParameter) {
+                        wordsParams[
+                            [
+                                "age_of_aquisition",
+                                "number_of_phon",
+                                "number_of_syll",
+                            ][Number(msg?.text) - 1] as keyof QueryWords
+                        ] = numericAttribute as NumericAttribute &
+                            StringAttribute;
+                    }
                     break;
                 default:
                     break;
