@@ -21,7 +21,7 @@ import {
 export default function ChatBox() {
     const [messages, setMessages] = useRecoilState(messagesSectionAtom);
     const [isQuerySubmit, setIsQuerySubmit] = useRecoilState(isQuerySubmitAtom);
-    const [_, setQueryParams] = useRecoilState(queryParamsAtom);
+    const [queryParams, setQueryParams] = useRecoilState(queryParamsAtom);
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const [currentMessagesSection, setCurrentMessagesSection] = useState<
         Message[]
@@ -29,6 +29,10 @@ export default function ChatBox() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [isEndSection, setIsEndSection] = useState<boolean>(false);
     const [isEndChat, setIsEndChat] = useState<boolean>(false);
+    const [lastQuestionIndex, setLastQuestionIndex] = useState<number>(
+        botMessages.length - 1
+    );
+    const [isStringParameter, setIsStringParameter] = useState<boolean>(false);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -44,6 +48,9 @@ export default function ChatBox() {
             currentQuestionIndex,
             setIsEndSection,
             setIsSubmit,
+            lastQuestionIndex,
+            setLastQuestionIndex,
+            setIsStringParameter,
             isSubmit
         );
 
@@ -60,8 +67,13 @@ export default function ChatBox() {
     }, [currentQuestionIndex, isEndChat]);
 
     useEffect(() => {
+        setLastQuestionIndex(botMessages.length - 1);
+    }, [botMessages]);
+
+    useEffect(() => {
         if (isEndChat) {
-            setQueryParams(handleEndChat(messages));
+            const params = handleEndChat(messages, isStringParameter);
+            setQueryParams(params);
             setIsQuerySubmit(true);
         }
     }, [isEndChat]);

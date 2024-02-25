@@ -47,6 +47,8 @@ export default function Chat() {
                         age_of_aquisition: queryParams?.age_of_aquisition,
                         number_of_phon: queryParams?.number_of_phon,
                         number_of_syll: queryParams?.number_of_syll,
+                        start_with: queryParams?.start_with,
+                        sound_like: queryParams?.sound_like,
                     }),
                 });
 
@@ -66,10 +68,6 @@ export default function Chat() {
             getQueryWords();
         }
     }, [isQuerySubmit]);
-
-    useEffect(() => {
-        console.log("result", queryWords.data);
-    }, [queryWords]);
 
     useEffect(() => {
         if (isQuerySubmit) {
