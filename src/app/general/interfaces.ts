@@ -21,10 +21,11 @@ export enum Operator {
     Greater = "Greater",
     Lower = "Lower",
     Equal = "Equal",
+    Range = "Range",
 }
 
 export interface NumericAttribute {
-    value: number;
+    value: number | number[];
     operator: Operator;
 }
 

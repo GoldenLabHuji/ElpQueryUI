@@ -1,4 +1,9 @@
-import { Message, NumericAttribute, Operator } from "@/app/general/interfaces";
+import {
+    Message,
+    NumericAttribute,
+    StringAttribute,
+    Operator,
+} from "@/app/general/interfaces";
 import { sender, typeOfQuestion } from "@/app/general/types";
 
 export const botMessages: Message[] = [
@@ -48,7 +53,7 @@ export const botNumericMessages: Message[] = [
 I need to know few things about your specific 
 requirments to the property you have chosen above.
 
-First I need to know if you want the words to be greater, lower or equal to a specific value.
+First I need to know if you want the words to be greater, lower, equal to a specific value or in a specific range.
 Then I need to know the value of this property you want to start with.
 
 Enter 1 to continue`,
@@ -69,17 +74,20 @@ Enter 1 to continue`,
         id: 2,
         text: `Let's start with the first question.
         
-Do you want the words to be greater, lower or equal to a specific value?
+Do you want the words to be greater, lower, equal to a specific value or in a specific range?
 
 1. Greater
 2. Lower
-3. Equal`,
+3. Equal
+4. Range`,
         sender: "bot",
         typeOfQuestion: "operator",
-        answerOptions: [1, 2, 3],
+        answerOptions: [1, 2, 3, 4],
     },
+];
+export const botOperatorMessages: Message[] = [
     {
-        id: 3,
+        id: 0,
         text: `Now I need to know the value of this parameter you want to start with.
         
 What would you like the value of this property to be?`,
@@ -87,7 +95,40 @@ What would you like the value of this property to be?`,
         typeOfQuestion: "value",
     },
     {
-        id: 4,
+        id: 1,
+        text: `Do you want to add more parameter?
+1. Yes
+2. No`,
+        sender: "bot",
+        typeOfQuestion: "add",
+        answerOptions: [1, 2],
+    },
+];
+
+export const botRangeOperatorMessages: Message[] = [
+    {
+        id: 0,
+        text: `Now I need to know the range of values you want to start with.
+First I need to know the lower value of the range, then the higher value of the range.
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 1,
+        text: "What would you like the <b>lower</b> value of this range to be?",
+        sender: "bot",
+        typeOfQuestion: "value",
+    },
+    {
+        id: 1,
+        text: "What would you like the <b>higher</b> value of this range to be?",
+        sender: "bot",
+        typeOfQuestion: "value",
+    },
+    {
+        id: 1,
         text: `Do you want to add more parameter?
 1. Yes
 2. No`,
@@ -146,6 +187,10 @@ What would you like the this word to be?`,
 export const emptyNumericAttribute: NumericAttribute = {
     value: 0,
     operator: Operator.Greater,
+};
+
+export const emptyStringAttribute: StringAttribute = {
+    value: "",
 };
 
 export const resultMsg = {
