@@ -51,6 +51,7 @@ export default function ChatBox() {
             lastQuestionIndex,
             setLastQuestionIndex,
             setIsStringParameter,
+            isStringParameter,
             isSubmit
         );
 

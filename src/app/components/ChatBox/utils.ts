@@ -12,8 +12,12 @@ import {
     botMessages,
     botStringMessages,
     botNumericMessages,
+    botOperatorMessages,
+    botRangeOperatorMessages,
     emptyNumericAttribute,
+    emptyStringAttribute,
 } from "@/app/general/resources";
+import { isNumberArray } from "@/app/general/utils";
 
 export const handleUserInput = (
     input: string,
@@ -27,6 +31,7 @@ export const handleUserInput = (
     lastQuestionIndex: number,
     setLastQuestionIndex: (lastQuestionIndex: number) => void,
     setIsStringParameter: (isStringParameter: boolean) => void,
+    isStringParameter: boolean,
     isSubmit: boolean
 ) => {
     const lastMessageSectionQuestion =
@@ -67,15 +72,29 @@ export const handleUserInput = (
             setIsEndChat(true);
         }
 
-        if (typeOfQuestion === "parameter" && Number(input) === 4) {
-            setIsStringParameter(true);
-            botMessages.push(...botStringMessages);
-            setLastQuestionIndex(botMessages.length - 1);
-            setIsEndSection(false);
-        } else if (typeOfQuestion === "parameter" && Number(input) !== 4) {
-            setIsStringParameter(false);
-            botMessages.push(...botNumericMessages);
-            setLastQuestionIndex(botMessages.length - 1);
+        if (typeOfQuestion === "parameter") {
+            if (Number(input) === 4) {
+                setIsStringParameter(true);
+                botMessages.push(...botStringMessages);
+                setLastQuestionIndex(botMessages.length - 1);
+                setIsEndSection(false);
+            } else {
+                setIsStringParameter(false);
+                botMessages.push(...botNumericMessages);
+                setLastQuestionIndex(botMessages.length - 1);
+            }
+        }
+
+        if (!isStringParameter) {
+            if (typeOfQuestion === "operator") {
+                if (Number(input) === 4) {
+                    botMessages.push(...botRangeOperatorMessages);
+                    setLastQuestionIndex(botMessages.length - 1);
+                } else {
+                    botMessages.push(...botOperatorMessages);
+                    setLastQuestionIndex(botMessages.length - 1);
+                }
+            }
         }
 
         setCurrentQuestionIndex(
@@ -136,23 +155,29 @@ export const handleEndChat = (
         sound_like: null,
     };
 
+    const numericAttribute: NumericAttribute = {
+        ...emptyNumericAttribute,
+    };
+    const stringAttribute: StringAttribute = {
+        ...emptyStringAttribute,
+    };
+
     messages.forEach((msgSec) => {
         const userFilteredMessages = msgSec?.messageSection.filter(
             (msg) => msg && msg?.sender === "user"
         );
 
-        const numericAttribute: NumericAttribute = {
-            ...emptyNumericAttribute,
-        };
-        const stringAttribute: StringAttribute = {
-            value: "",
-        };
-
         userFilteredMessages?.forEach((msg) => {
             switch (msg?.typeOfQuestion) {
                 case "value":
                     if (!isStringParameter) {
-                        numericAttribute.value = Number(msg?.text);
+                        if (numericAttribute.operator === Operator.Range) {
+                            if (isNumberArray(numericAttribute.value)) {
+                                numericAttribute.value.push(Number(msg?.text));
+                            }
+                        } else {
+                            numericAttribute.value = Number(msg?.text);
+                        }
                     } else {
                         stringAttribute.value = msg?.text;
                     }
@@ -163,7 +188,11 @@ export const handleEndChat = (
                             Operator.Greater,
                             Operator.Lower,
                             Operator.Equal,
+                            Operator.Range,
                         ][Number(msg?.text) - 1];
+                        if (Number(msg?.text) === 4) {
+                            numericAttribute.value = [] as number[];
+                        }
                     } else {
                         wordsParams[
                             ["start_with", "sound_like"][
