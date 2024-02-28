@@ -68,7 +68,7 @@ export const handleUserInput = (
         };
         setCurrentMessagesSection([...currentMessagesSection, newMessage]);
 
-        if (typeOfQuestion === "add" && Number(input) === 2) {
+        if (typeOfQuestion === "add" && Number(input) === 1) {
             setIsEndChat(true);
         }
 

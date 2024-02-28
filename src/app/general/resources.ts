@@ -96,12 +96,12 @@ What would you like the value of this property to be?`,
     },
     {
         id: 1,
-        text: `Do you want to add more parameter?
-1. Yes
-2. No`,
+        text: `Your request has been confirmed.
+        
+Enter 1 to continue`,
         sender: "bot",
         typeOfQuestion: "add",
-        answerOptions: [1, 2],
+        answerOptions: [1],
     },
 ];
 
@@ -122,19 +122,19 @@ Enter 1 to continue`,
         typeOfQuestion: "value",
     },
     {
-        id: 1,
+        id: 2,
         text: "What would you like the <b>higher</b> value of this range to be?",
         sender: "bot",
         typeOfQuestion: "value",
     },
     {
-        id: 1,
-        text: `Do you want to add more parameter?
-1. Yes
-2. No`,
+        id: 3,
+        text: `Your request has been confirmed.
+        
+Enter 1 to continue`,
         sender: "bot",
         typeOfQuestion: "add",
-        answerOptions: [1, 2],
+        answerOptions: [1],
     },
 ];
 
@@ -175,12 +175,12 @@ What would you like the this word to be?`,
     },
     {
         id: 3,
-        text: `Do you want to add more parameter?
-1. Yes
-2. No`,
+        text: `Your request has been confirmed.
+        
+Enter 1 to continue`,
         sender: "bot",
         typeOfQuestion: "add",
-        answerOptions: [1, 2],
+        answerOptions: [1],
     },
 ];
 
