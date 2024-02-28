@@ -11,9 +11,10 @@ import {
 import {
     botMessages,
     botStringMessages,
-    botNumericMessages,
     botOperatorMessages,
     botRangeOperatorMessages,
+    botNumericEqualMessages,
+    botNumericNotEqualMessages,
     emptyNumericAttribute,
     emptyStringAttribute,
 } from "@/app/general/resources";
@@ -80,14 +81,18 @@ export const handleUserInput = (
                 setIsEndSection(false);
             } else {
                 setIsStringParameter(false);
-                botMessages.push(...botNumericMessages);
+                if (Number(input) === 1) {
+                    botMessages.push(...botNumericNotEqualMessages);
+                } else {
+                    botMessages.push(...botNumericEqualMessages);
+                }
                 setLastQuestionIndex(botMessages.length - 1);
             }
         }
 
         if (!isStringParameter) {
             if (typeOfQuestion === "operator") {
-                if (Number(input) === 4) {
+                if (Number(input) === 3) {
                     botMessages.push(...botRangeOperatorMessages);
                     setLastQuestionIndex(botMessages.length - 1);
                 } else {
@@ -187,10 +192,10 @@ export const handleEndChat = (
                         numericAttribute.operator = [
                             Operator.Greater,
                             Operator.Lower,
-                            Operator.Equal,
                             Operator.Range,
+                            Operator.Equal,
                         ][Number(msg?.text) - 1];
-                        if (Number(msg?.text) === 4) {
+                        if (Number(msg?.text) === 3) {
                             numericAttribute.value = [] as number[];
                         }
                     } else {

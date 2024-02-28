@@ -46,14 +46,14 @@ Which property would you like to start with?`,
     },
 ];
 
-export const botNumericMessages: Message[] = [
+export const botNumericNotEqualMessages: Message[] = [
     {
         id: 0,
         text: `To help you get the words you desire, 
 I need to know few things about your specific 
 requirments to the property you have chosen above.
 
-First I need to know if you want the words to be greater, lower, equal to a specific value or in a specific range.
+First I need to know if you want the words to be greater, lower or in a specific range.
 Then I need to know the value of this property you want to start with.
 
 Enter 1 to continue`,
@@ -63,7 +63,7 @@ Enter 1 to continue`,
     },
     {
         id: 1,
-        text: `For example, if you chose the property "age of aquisition" and you want words that aquiered at the age of 5 or less, you will choose the "Lower" in this question, and then the value 5 in the next question.
+        text: `For example, if you chose the property "age of aquisition" and you want words that aquiered at the age of 5 or less, you will choose the "Lower" in the first question, and then the value 5 in the next question.
 
 Enter 1 to continue`,
         sender: "bot",
@@ -74,12 +74,52 @@ Enter 1 to continue`,
         id: 2,
         text: `Let's start with the first question.
         
-Do you want the words to be greater, lower, equal to a specific value or in a specific range?
+Do you want the words to be greater, lower, or in a specific range?
 
 1. Greater
 2. Lower
-3. Equal
-4. Range`,
+3. Range`,
+        sender: "bot",
+        typeOfQuestion: "operator",
+        answerOptions: [1, 2, 3],
+    },
+];
+
+export const botNumericEqualMessages: Message[] = [
+    {
+        id: 0,
+        text: `To help you get the words you desire, 
+I need to know few things about your specific 
+requirments to the property you have chosen above.
+
+First I need to know if you want the words to be greater, lower, in a specific range or equal to a specific value.
+Then I need to know the value of this property you want to start with.
+
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 1,
+        text: `For example, if you chose the property "number of phonemes" and you want words that have between 4 and 7 phonemes , you will choose the "Range" in the first question, then the value 4 in the second question and then the value 7 in the third question.
+
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 2,
+        text: `Let's start with the first question.
+        
+Do you want the words to be greater, lower, in a specific range or equal to a specific value?
+
+1. Greater
+2. Lower
+3. Range
+4. Equal
+`,
         sender: "bot",
         typeOfQuestion: "operator",
         answerOptions: [1, 2, 3, 4],
