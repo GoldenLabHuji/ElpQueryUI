@@ -34,6 +34,8 @@ export default function ChatBox() {
     );
     const [isStringParameter, setIsStringParameter] = useState<boolean>(false);
 
+    const botMessagesCopy = [...botMessages];
+
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
@@ -52,7 +54,7 @@ export default function ChatBox() {
             setLastQuestionIndex,
             setIsStringParameter,
             isStringParameter,
-            isSubmit
+            isSubmit,
         );
 
         e.currentTarget.reset();
@@ -91,6 +93,10 @@ export default function ChatBox() {
             isEndChat
         );
     }, [currentMessagesSection, isSubmit, isEndSection]);
+
+    useEffect(() => {
+        console.log(messages);
+    }, [messages]);
 
     return (
         <Box sx={styles.box}>

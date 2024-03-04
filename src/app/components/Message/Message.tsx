@@ -5,7 +5,7 @@ import SmartToyIcon from "@mui/icons-material/SmartToy";
 import PersonIcon from "@mui/icons-material/Person";
 
 export default function Message({ message }: MessageProps) {
-    const isBot = message.sender === "bot";
+    const isBot = message?.sender === "bot";
 
     return (
         <Box sx={isBot ? styles.container.bot : styles.container.user}>
@@ -21,7 +21,7 @@ export default function Message({ message }: MessageProps) {
                         sx={styles.text}
                         variant="body1"
                         component="div"
-                        dangerouslySetInnerHTML={{ __html: message.text }}
+                        dangerouslySetInnerHTML={{ __html: message?.text }}
                     />
                 </Paper>
             </Box>

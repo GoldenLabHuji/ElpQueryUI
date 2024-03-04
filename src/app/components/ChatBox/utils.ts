@@ -42,10 +42,11 @@ export const handleUserInput = (
             ? lastMessageSectionQuestion.typeOfQuestion
             : "";
 
-    if (
-        lastMessageSectionQuestion.answerOptions &&
-        !lastMessageSectionQuestion.answerOptions?.includes(Number(input))
-    ) {
+    const isAnswerOptions = !!lastMessageSectionQuestion.answerOptions;
+    const isAnswerOptionsValid =
+        lastMessageSectionQuestion.answerOptions?.includes(Number(input));
+
+    if ((isAnswerOptions && !isAnswerOptionsValid) || input === "") {
         const newMessage: Message = {
             id: currentMessagesSection.length,
             text: "I don't understand, please enter a valid option",
@@ -56,11 +57,7 @@ export const handleUserInput = (
         setCurrentMessagesSection([...currentMessagesSection, newMessage]);
     }
 
-    if (
-        (lastMessageSectionQuestion.answerOptions?.includes(Number(input)) ||
-            !lastMessageSectionQuestion.answerOptions) &&
-        input !== ""
-    ) {
+    if ((!isAnswerOptions && input !== "") || isAnswerOptionsValid) {
         const newMessage: Message = {
             id: currentMessagesSection.length,
             text: input,
@@ -69,37 +66,49 @@ export const handleUserInput = (
         };
         setCurrentMessagesSection([...currentMessagesSection, newMessage]);
 
-        if (typeOfQuestion === "add" && Number(input) === 2) {
-            setIsEndChat(true);
-        }
-
-        if (typeOfQuestion === "parameter") {
-            if (Number(input) === 4) {
-                setIsStringParameter(true);
-                botMessages.push(...botStringMessages);
-                setLastQuestionIndex(botMessages.length - 1);
-                setIsEndSection(false);
-            } else {
-                setIsStringParameter(false);
-                if (Number(input) === 1) {
-                    botMessages.push(...botNumericNotEqualMessages);
+        switch (typeOfQuestion) {
+            case "add":
+                if (Number(input) === 2) {
+                    setIsEndChat(true);
                 } else {
-                    botMessages.push(...botNumericEqualMessages);
+                    setIsEndSection(true);
+                    botMessages.splice(3);
+                    setCurrentMessagesSection([
+                        ...currentMessagesSection,
+                        botMessages[0],
+                    ]);
+                    // setCurrentQuestionIndex(0);
                 }
-                setLastQuestionIndex(botMessages.length - 1);
-            }
-        }
-
-        if (!isStringParameter) {
-            if (typeOfQuestion === "operator") {
-                if (Number(input) === 3) {
-                    botMessages.push(...botRangeOperatorMessages);
+                break;
+            case "parameter":
+                if (Number(input) === 4) {
+                    setIsStringParameter(true);
+                    botMessages.push(...botStringMessages);
                     setLastQuestionIndex(botMessages.length - 1);
+                    setIsEndSection(false);
                 } else {
-                    botMessages.push(...botOperatorMessages);
+                    setIsStringParameter(false);
+                    if (Number(input) === 1) {
+                        botMessages.push(...botNumericNotEqualMessages);
+                    } else {
+                        botMessages.push(...botNumericEqualMessages);
+                    }
                     setLastQuestionIndex(botMessages.length - 1);
                 }
-            }
+                break;
+            case "operator":
+                if (!isStringParameter) {
+                    if (Number(input) === 3) {
+                        botMessages.push(...botRangeOperatorMessages);
+                        setLastQuestionIndex(botMessages.length - 1);
+                    } else {
+                        botMessages.push(...botOperatorMessages);
+                        setLastQuestionIndex(botMessages.length - 1);
+                    }
+                }
+                break;
+            default:
+                break;
         }
 
         setCurrentQuestionIndex(
@@ -109,7 +118,7 @@ export const handleUserInput = (
         );
     }
 
-    setIsEndSection(currentQuestionIndex === lastQuestionIndex);
+    // setIsEndSection(currentQuestionIndex === lastQuestionIndex);
     setIsSubmit(!isSubmit);
 };
 
