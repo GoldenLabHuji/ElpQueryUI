@@ -9,12 +9,12 @@ import {
     StringAttribute,
 } from "@/app/general/interfaces";
 import {
-    botMessages,
     botStringMessages,
     botOperatorMessages,
     botRangeOperatorMessages,
     botNumericEqualMessages,
     botNumericNotEqualMessages,
+    botAddParameterMessages,
     emptyNumericAttribute,
     emptyStringAttribute,
 } from "@/app/general/resources";
@@ -22,6 +22,8 @@ import { isNumberArray } from "@/app/general/utils";
 
 export const handleUserInput = (
     input: string,
+    botMsg: Message[],
+    setBotMsg: (messages: Message[]) => void,
     currentMessagesSection: Message[],
     setCurrentMessagesSection: (messages: Message[]) => void,
     setCurrentQuestionIndex: (index: number) => void,
@@ -30,7 +32,6 @@ export const handleUserInput = (
     setIsEndSection: (isEndSection: boolean) => void,
     setIsSubmit: (isSubmit: boolean) => void,
     lastQuestionIndex: number,
-    setLastQuestionIndex: (lastQuestionIndex: number) => void,
     setIsStringParameter: (isStringParameter: boolean) => void,
     isStringParameter: boolean,
     isSubmit: boolean
@@ -72,38 +73,29 @@ export const handleUserInput = (
                     setIsEndChat(true);
                 } else {
                     setIsEndSection(true);
-                    botMessages.splice(3);
-                    setCurrentMessagesSection([
-                        ...currentMessagesSection,
-                        botMessages[0],
-                    ]);
-                    // setCurrentQuestionIndex(0);
+                    setBotMsg([...botMsg, ...botAddParameterMessages]);
                 }
                 break;
             case "parameter":
                 if (Number(input) === 4) {
                     setIsStringParameter(true);
-                    botMessages.push(...botStringMessages);
-                    setLastQuestionIndex(botMessages.length - 1);
+                    setBotMsg([...botMsg, ...botStringMessages]);
                     setIsEndSection(false);
                 } else {
                     setIsStringParameter(false);
                     if (Number(input) === 1) {
-                        botMessages.push(...botNumericNotEqualMessages);
+                        setBotMsg([...botMsg, ...botNumericNotEqualMessages]);
                     } else {
-                        botMessages.push(...botNumericEqualMessages);
+                        setBotMsg([...botMsg, ...botNumericEqualMessages]);
                     }
-                    setLastQuestionIndex(botMessages.length - 1);
                 }
                 break;
             case "operator":
                 if (!isStringParameter) {
                     if (Number(input) === 3) {
-                        botMessages.push(...botRangeOperatorMessages);
-                        setLastQuestionIndex(botMessages.length - 1);
+                        setBotMsg([...botMsg, ...botRangeOperatorMessages]);
                     } else {
-                        botMessages.push(...botOperatorMessages);
-                        setLastQuestionIndex(botMessages.length - 1);
+                        setBotMsg([...botMsg, ...botOperatorMessages]);
                     }
                 }
                 break;
@@ -117,13 +109,12 @@ export const handleUserInput = (
                 : 0
         );
     }
-
-    // setIsEndSection(currentQuestionIndex === lastQuestionIndex);
     setIsSubmit(!isSubmit);
 };
 
 export const updateMessagesSection = (
     currentQuestionIndex: number,
+    botMsg: Message[],
     currentMessagesSection: Message[],
     setCurrentMessagesSection: (messages: Message[]) => void,
     setIsEndSection: (isEndSection: boolean) => void,
@@ -150,7 +141,7 @@ export const updateMessagesSection = (
     });
     if (isEndSection) {
         setCurrentMessagesSection(
-            !isEndChat ? [botMessages[currentQuestionIndex]] : []
+            !isEndChat ? [botMsg[currentQuestionIndex]] : []
         );
     }
 

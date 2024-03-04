@@ -224,6 +224,32 @@ What would you like the this word to be?`,
     },
 ];
 
+export const botAddParameterMessages: Message[] = [
+    {
+        id: 0,
+        text: `To add another parameter, I will go through the same process as before.
+
+Enter 1 to continue`,
+        sender: "bot",
+        typeOfQuestion: "intro",
+        answerOptions: [1],
+    },
+    {
+        id: 1,
+        text: `At the moment, I have the capacity of helping you extract data based on five word properties:
+
+1: Age of Acquisition
+2: Number of Phonemes
+3: Number of Syllables
+4: Related words ( like words that start with the same characters as a chosen word or words that sound like a chosen word )
+
+Which property would you like to start with?`,
+        sender: "bot",
+        typeOfQuestion: "parameter",
+        answerOptions: [1, 2, 3, 4],
+    },
+];
+
 export const emptyNumericAttribute: NumericAttribute = {
     value: 0,
     operator: Operator.Greater,
