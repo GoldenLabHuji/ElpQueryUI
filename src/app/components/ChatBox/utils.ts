@@ -9,12 +9,12 @@ import {
     StringAttribute,
 } from "@/app/general/interfaces";
 import {
-    botMessages,
     botStringMessages,
     botOperatorMessages,
     botRangeOperatorMessages,
     botNumericEqualMessages,
     botNumericNotEqualMessages,
+    botAddParameterMessages,
     emptyNumericAttribute,
     emptyStringAttribute,
 } from "@/app/general/resources";
@@ -22,6 +22,8 @@ import { isNumberArray } from "@/app/general/utils";
 
 export const handleUserInput = (
     input: string,
+    botMsg: Message[],
+    setBotMsg: (messages: Message[]) => void,
     currentMessagesSection: Message[],
     setCurrentMessagesSection: (messages: Message[]) => void,
     setCurrentQuestionIndex: (index: number) => void,
@@ -30,7 +32,6 @@ export const handleUserInput = (
     setIsEndSection: (isEndSection: boolean) => void,
     setIsSubmit: (isSubmit: boolean) => void,
     lastQuestionIndex: number,
-    setLastQuestionIndex: (lastQuestionIndex: number) => void,
     setIsStringParameter: (isStringParameter: boolean) => void,
     isStringParameter: boolean,
     isSubmit: boolean
@@ -42,10 +43,11 @@ export const handleUserInput = (
             ? lastMessageSectionQuestion.typeOfQuestion
             : "";
 
-    if (
-        lastMessageSectionQuestion.answerOptions &&
-        !lastMessageSectionQuestion.answerOptions?.includes(Number(input))
-    ) {
+    const isAnswerOptions = !!lastMessageSectionQuestion.answerOptions;
+    const isAnswerOptionsValid =
+        lastMessageSectionQuestion.answerOptions?.includes(Number(input));
+
+    if ((isAnswerOptions && !isAnswerOptionsValid) || input === "") {
         const newMessage: Message = {
             id: currentMessagesSection.length,
             text: "I don't understand, please enter a valid option",
@@ -56,11 +58,7 @@ export const handleUserInput = (
         setCurrentMessagesSection([...currentMessagesSection, newMessage]);
     }
 
-    if (
-        (lastMessageSectionQuestion.answerOptions?.includes(Number(input)) ||
-            !lastMessageSectionQuestion.answerOptions) &&
-        input !== ""
-    ) {
+    if ((!isAnswerOptions && input !== "") || isAnswerOptionsValid) {
         const newMessage: Message = {
             id: currentMessagesSection.length,
             text: input,
@@ -69,37 +67,40 @@ export const handleUserInput = (
         };
         setCurrentMessagesSection([...currentMessagesSection, newMessage]);
 
-        if (typeOfQuestion === "add" && Number(input) === 2) {
-            setIsEndChat(true);
-        }
-
-        if (typeOfQuestion === "parameter") {
-            if (Number(input) === 4) {
-                setIsStringParameter(true);
-                botMessages.push(...botStringMessages);
-                setLastQuestionIndex(botMessages.length - 1);
-                setIsEndSection(false);
-            } else {
-                setIsStringParameter(false);
-                if (Number(input) === 1) {
-                    botMessages.push(...botNumericNotEqualMessages);
+        switch (typeOfQuestion) {
+            case "add":
+                if (Number(input) === 2) {
+                    setIsEndChat(true);
                 } else {
-                    botMessages.push(...botNumericEqualMessages);
+                    setIsEndSection(true);
+                    setBotMsg([...botMsg, ...botAddParameterMessages]);
                 }
-                setLastQuestionIndex(botMessages.length - 1);
-            }
-        }
-
-        if (!isStringParameter) {
-            if (typeOfQuestion === "operator") {
-                if (Number(input) === 3) {
-                    botMessages.push(...botRangeOperatorMessages);
-                    setLastQuestionIndex(botMessages.length - 1);
+                break;
+            case "parameter":
+                if (Number(input) === 4) {
+                    setIsStringParameter(true);
+                    setBotMsg([...botMsg, ...botStringMessages]);
+                    setIsEndSection(false);
                 } else {
-                    botMessages.push(...botOperatorMessages);
-                    setLastQuestionIndex(botMessages.length - 1);
+                    setIsStringParameter(false);
+                    if (Number(input) === 1) {
+                        setBotMsg([...botMsg, ...botNumericNotEqualMessages]);
+                    } else {
+                        setBotMsg([...botMsg, ...botNumericEqualMessages]);
+                    }
                 }
-            }
+                break;
+            case "operator":
+                if (!isStringParameter) {
+                    if (Number(input) === 3) {
+                        setBotMsg([...botMsg, ...botRangeOperatorMessages]);
+                    } else {
+                        setBotMsg([...botMsg, ...botOperatorMessages]);
+                    }
+                }
+                break;
+            default:
+                break;
         }
 
         setCurrentQuestionIndex(
@@ -108,13 +109,12 @@ export const handleUserInput = (
                 : 0
         );
     }
-
-    setIsEndSection(currentQuestionIndex === lastQuestionIndex);
     setIsSubmit(!isSubmit);
 };
 
 export const updateMessagesSection = (
     currentQuestionIndex: number,
+    botMsg: Message[],
     currentMessagesSection: Message[],
     setCurrentMessagesSection: (messages: Message[]) => void,
     setIsEndSection: (isEndSection: boolean) => void,
@@ -141,7 +141,7 @@ export const updateMessagesSection = (
     });
     if (isEndSection) {
         setCurrentMessagesSection(
-            !isEndChat ? [botMessages[currentQuestionIndex]] : []
+            !isEndChat ? [botMsg[currentQuestionIndex]] : []
         );
     }
 

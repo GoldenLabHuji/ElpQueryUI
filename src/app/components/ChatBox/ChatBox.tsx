@@ -33,6 +33,7 @@ export default function ChatBox() {
         botMessages.length - 1
     );
     const [isStringParameter, setIsStringParameter] = useState<boolean>(false);
+    const [botMsg, setBotMsg] = useState<Message[]>(botMessages);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -41,6 +42,8 @@ export default function ChatBox() {
 
         handleUserInput(
             input,
+            botMsg,
+            setBotMsg,
             currentMessagesSection,
             setCurrentMessagesSection,
             setCurrentQuestionIndex,
@@ -49,7 +52,6 @@ export default function ChatBox() {
             setIsEndSection,
             setIsSubmit,
             lastQuestionIndex,
-            setLastQuestionIndex,
             setIsStringParameter,
             isStringParameter,
             isSubmit
@@ -62,14 +64,14 @@ export default function ChatBox() {
         if (!isEndChat) {
             setCurrentMessagesSection([
                 ...currentMessagesSection,
-                botMessages[currentQuestionIndex],
+                botMsg[currentQuestionIndex],
             ]);
         }
     }, [currentQuestionIndex, isEndChat]);
 
     useEffect(() => {
-        setLastQuestionIndex(botMessages.length - 1);
-    }, [botMessages]);
+        setLastQuestionIndex(botMsg.length - 1);
+    }, [botMsg]);
 
     useEffect(() => {
         if (isEndChat) {
@@ -82,6 +84,7 @@ export default function ChatBox() {
     useEffect(() => {
         updateMessagesSection(
             currentQuestionIndex,
+            botMsg,
             currentMessagesSection,
             setCurrentMessagesSection,
             setIsEndSection,
